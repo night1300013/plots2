@@ -133,14 +133,11 @@
           $('#password, #password-confirmation').on('keyup', function () {
             if ($('#password').val() == $('#password-confirmation').val()) {
               $('#password-match').html('&#10004 Passwords Match').css('color', 'green');
-              //console.log("match:" + $('#password').val() + " v " + $('#password-confirmation').val());
               $('#password, #password-confirmation').css('borderColor', 'green');
             } else {
               $('#password-match').html('&#10008 Passwords Do Not Match').css('color', 'red');
-              //console.log("not match:" + $('#password').val() + " v " + $('#password-confirmation').val());
               $('#password, #password-confirmation').css('borderColor', 'red');
             }
-          //console.log("typed");
           })
         })();
       </script>
