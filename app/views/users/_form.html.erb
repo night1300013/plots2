@@ -69,8 +69,9 @@
                                                      class: 'form-control',
                                                      id: 'password-confirmation' }
       %>
+    <div style='padding-top: 5px' id='password-match'></div>
     </div>
-
+    
 
     <div class="form-group">
       <label for="user_bio"><%= t('users._form.bio') %></label>
@@ -125,6 +126,21 @@
           $('.btn-save').click(function onClick(e) {
             $(this).addClass("disabled") // disable the button after it is clicked
                    .html("<i class='fa fa-spinner fa-spin'></i>"); // make a spinner that spins when clicked
+          })
+        })();
+
+        (function() {
+          $('#password, #password-confirmation').on('keyup', function () {
+            if ($('#password').val() == $('#password-confirmation').val()) {
+              $('#password-match').html('&#10004 Passwords Match').css('color', 'green');
+              //console.log("match:" + $('#password').val() + " v " + $('#password-confirmation').val());
+              $('#password, #password-confirmation').css('borderColor', 'green');
+            } else {
+              $('#password-match').html('&#10008 Passwords Do Not Match').css('color', 'red');
+              //console.log("not match:" + $('#password').val() + " v " + $('#password-confirmation').val());
+              $('#password, #password-confirmation').css('borderColor', 'red');
+            }
+          //console.log("typed");
           })
         })();
       </script>
