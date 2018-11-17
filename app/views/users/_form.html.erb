@@ -133,7 +133,7 @@
             //e.preventDefault();
             $('.form-control').trigger('keyup');
             $('.validate').each(function() {  
-              if($(this).html() != '' && !($(this).html().indexOf('Match') > -1)) {
+              if($(this).html() != '' && !this.classList.contains('chk')) {
                 e.preventDefault();
                 console.log($(this).html());
                 
@@ -154,6 +154,7 @@
         })();
 
         (function() {
+          var passwordValid;
           $('#username').on('keyup', function() {
             //Username Requirements:
             //At least 3 characters
@@ -204,11 +205,12 @@
           $('#password, #password-confirmation').on('keyup', function () {
             if(passwordValid) {
               if ($('#password').val() == $('#password-confirmation').val()) {
-                $('#password-match').html('&#10004 Passwords Match').css('color', 'green');
+                $('#password-match').html('&#10004 Passwords Match').css('color', 'green').toggleClass('chk', true);
                 $('#password, #password-confirmation').css('borderColor', 'green');
+                
               } 
               else {
-                $('#password-match').html('&#10008 Passwords Do Not Match').css('color', 'red');
+                $('#password-match').html('&#10008 Passwords Do Not Match').css('color', 'red').toggleClass('chk', false);
                 $('#password, #password-confirmation').css('borderColor', 'red');
               }
             }
