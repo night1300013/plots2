@@ -26,7 +26,7 @@
 
         <input type="hidden" name="id" value="<%= @user.username %>" />
         
-        <div id="username-valid" style="color: red; padding-top:5px" class='validate'></div>
+        <div class='validate' id="username-valid" style="color: red; padding-top:5px" ></div>
       </div>
 
     <% end %>
@@ -48,7 +48,7 @@
       <label for="email"><%= t('users._form.email') %></label>
       <%= f.text_field :email, { tabindex: 3, placeholder: "you@email.com", class: 'form-control', id: 'email' } %>
     
-      <div id='email-valid' style='color: red; padding-top: 5px;' class='validate'></div>
+      <div class='validate' id='email-valid' style='color: red; padding-top: 5px;'></div>
     </div>
 
 
@@ -63,7 +63,7 @@
                                         class: 'form-control',
                                         id: 'password' }
       %>
-      <div style='padding-top: 5px; color: red' id='password-valid' class='validate'></div>
+      <div class='validate' id='password-valid' style='padding-top: 5px; color: red'></div>
     </div>
 
     <div class="form-group">
@@ -74,7 +74,7 @@
                                                      id: 'password-confirmation',
                                                      disabled: ''}
       %>
-    <div style='padding-top: 5px' id='password-match' class='validate'></div>
+    <div class='validate' id='password-match' style='padding-top: 5px'></div>
     </div>
     
 
@@ -129,19 +129,15 @@
       <script>
         (function() {
           $('.btn-save').click(function onClick(e) {
-            var validated = true;
-            //e.preventDefault();
-            $('.form-control').trigger('keyup');
+            var validated = true; 
+            $('.form-control').trigger('keyup'); //Prevents bypassing check when all fields have no been touched
             $('.validate').each(function() {  
-              if($(this).html() != '' && !this.classList.contains('chk')) {
+              if($(this).html() != '' && !this.classList.contains('chk')) { //Check that all messages are clear
                 e.preventDefault();
-                console.log($(this).html());
-                
                 validated = false;
-                
                 var offset = $(this).offset();
                 $('html, body').animate({
-                  scrollTop: offset.top + $(window).height / 2
+                  scrollTop: offset.top - $(window).height() / 2
                 });
                 return false;
               } 
@@ -155,6 +151,8 @@
 
         (function() {
           var passwordValid;
+          
+          //Check validity of username
           $('#username').on('keyup', function() {
             //Username Requirements:
             //At least 3 characters
@@ -162,7 +160,7 @@
             var username = $('#username').val();
             $('#username-valid').html("");
             var tooShort = (username.length < 3);
-            var invalidChars = !(new RegExp("^[a-zA-Z0-9-+@_.]+$").test(username));
+            var invalidChars = !(new RegExp("^[a-zA-Z0-9-+@_.]+$").test(username)) && username.length != 0;
             
             if(tooShort || invalidChars) {
               if(tooShort)     $('#username-valid').append('Username is too short (minimum is 3 characters).<br>');
@@ -174,9 +172,11 @@
             }
           });
           
+          //Check validity of email
           $('#email').on('keyup', function() {
-            var reg = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if(!reg.test($('#email').val())) {
+            //Email Regex
+            var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if(!emailRegex.test($('#email').val())) {
               $('#email').css('borderColor', 'red');
               $('#email-valid').html('Email is invalid.');
             }
@@ -186,8 +186,10 @@
             }
           });
           
+          //Check validity of password
           $('#password').on('keyup', function() {
-            //at least 8 chars
+            //Password Requirement: 
+            //At least 8 chars
             if($('#password').val().length < 8) {
               $('#password-valid').html("Password is too short (minimum is 8 characters).");
               $('#password').css('borderColor', 'red');
@@ -202,6 +204,7 @@
             }
           });
           
+          //Check if passwords match; only checks when password is valid
           $('#password, #password-confirmation').on('keyup', function () {
             if(passwordValid) {
               if ($('#password').val() == $('#password-confirmation').val()) {
